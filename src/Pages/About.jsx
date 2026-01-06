@@ -198,7 +198,7 @@ const AboutPage = () => {
       {
         icon: FileText,
         color: "from-[#6366f1] to-[#a855f7]",
-        value: "100+",
+        value: "80+",
         label: "Total Projects",
         description: "From raw to Remarkable",
         animation: "fade-right",
@@ -206,7 +206,7 @@ const AboutPage = () => {
       {
         icon: Award,
         color: "from-[#a855f7] to-[#6366f1]",
-        value: "50+",
+        value: "40+",
         label: "Happy Clients",
         description: "Clients with satisfied feedback",
         animation: "fade-up",

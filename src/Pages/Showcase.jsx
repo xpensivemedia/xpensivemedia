@@ -426,7 +426,7 @@ export default function Showcase() {
   
 
   return (
-    <div>
+    <div className="min-h-screen bg-[#030014] overflow-hidden" id="Showcase">
       <style>{`/* Converted showcase styles (trimmed to essentials) */
       :root{--primary-color:#2196F3;--bg-dark:#00033D;--text-muted:rgba(255,255,255,0.7)}
       .showcase-page{min-height:100vh;background:var(--bg-dark);padding:120px 0 2rem;color:#fff}

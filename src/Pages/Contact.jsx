@@ -140,7 +140,7 @@ const ContactPage = () => {
             </div>
 
             <form 
-              action="https://formsubmit.co/conquermedia.in@gmail.com "
+              action="https://formsubmit.co/xpensivemedia.co@gmail.com "
               method="POST"
               onSubmit={handleSubmit}
               className="space-y-6"
