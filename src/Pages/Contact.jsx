@@ -5,7 +5,6 @@ import Komentar from "../components/Commentar";
 import Swal from "sweetalert2";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import ResumePDF from '../assets/Gurudeep V Resume.pdf';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -106,13 +105,6 @@ const ContactPage = () => {
         >
           Got a question? Send us a message, and w'll get back to you soon.
         </p>
-        <div className="mt-8 flex justify-center" data-aos="fade-up" data-aos-duration="1200">
-            <a href={ResumePDF} download="Conquer_Media_Broucher.pdf" className="w-full max-w-xs sm:max-w-none sm:w-auto">
-                <button className="w-full sm:w-auto sm:px-6 py-3 rounded-lg border border-[#a855f7]/50 text-white font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 bg-[#7360f0] animate-bounce-slow">
-                    <FileText className="w-5 h-5" /> Download Broucher
-                </button>
-            </a>
-        </div>
       </div>
 
       <div
