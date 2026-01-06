@@ -9,6 +9,7 @@ import Navbar from "./components/Navbar";
 import Portofolio from "./Pages/Portofolio";
 import ContactPage from "./Pages/Contact";
 import ProjectDetails from "./components/ProjectDetail";
+import Services from "./Pages/Services";
 
 import { AnimatePresence } from 'framer-motion';
 
@@ -80,6 +81,7 @@ function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/showcase" element={<Showcase />} />
       <Route path="/project/:id" element={<ProjectPageLayout />} />
+      <Route path="/services" element={<Services />} />
     </Routes>
   );
 }

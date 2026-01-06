@@ -1,7 +1,7 @@
 import { Menu, X } from "lucide-react";
 import { useState, useEffect, useMemo } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-
+import { Link, useLocation, useNavigate, NavLink } from 'react-router-dom';
+ 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -10,9 +10,9 @@ const Navbar = () => {
     const navigate = useNavigate();
     
     const navItems = useMemo(() => [
-
         { href: "#Home", label: "Home" },
         { href: "#About", label: "About" },
+        { href: "#Services", label: "Services" },
         { href: "#Portofolio", label: "Portofolio" },
         { href: "/showcase", label: "Showcase" },
         { href: "#Contact", label: "Contact" },
@@ -60,30 +60,49 @@ const Navbar = () => {
 
     const scrollToSection = (e, href) => {
         e.preventDefault();
-        // hash link behavior
-        if (href.startsWith('#')) {
-            // if already on homepage, scroll to section
-            if (location.pathname === '/') {
-                const section = document.querySelector(href);
-                if (section) {
-                    const top = section.offsetTop - 100;
-                    window.scrollTo({ top, behavior: 'smooth' });
-                }
-                setIsOpen(false);
-                return;
-            }
 
-            // if on another route, navigate to home with hash
-            navigate('/' + href);
+        // Non-hash route: navigate normally
+        if (!href.startsWith('#')) {
+            navigate(href);
             setIsOpen(false);
             return;
         }
 
-        // route navigation
-        navigate(href);
-        setIsOpen(false);
-    };
+        // If already on home, scroll immediately
+        if (location.pathname === '/' || location.pathname === '') {
+            const section = document.querySelector(href);
+            if (section) {
+                const top = section.offsetTop - 100;
+                window.scrollTo({ top, behavior: 'smooth' });
+            } else {
+                // fallback: set hash so browser/SPA may handle it
+                window.location.hash = href;
+            }
+            setIsOpen(false);
+            return;
+        }
 
+        // Not on home: navigate to home with hash, then retry scrolling until the section exists
+        setIsOpen(false);
+        // navigate to "/#Services" (or respective hash)
+        navigate('/' + href);
+
+        const tryScroll = (retries = 0) => {
+            const section = document.querySelector(href);
+            if (section) {
+                const top = section.offsetTop - 100;
+                window.scrollTo({ top, behavior: 'smooth' });
+                return;
+            }
+            if (retries < 12) {
+                setTimeout(() => tryScroll(retries + 1), 120);
+            }
+        };
+
+        // start retries after slight delay to allow route/component to mount
+        setTimeout(() => tryScroll(0), 200);
+    };
+ 
     return (
         <nav
         className={`fixed w-full top-0 z-50 transition-all duration-500 ${

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Services from "./Services";
 import ResumePDF from '../assets/Gurudeep V Resume.pdf';
 
 // Memoized Components
@@ -272,7 +273,10 @@ const AboutPage = () => {
             </div>
           </div>
 
-          <ProfileImage />
+          <div className="max-w-6xl mx-auto">
+            <ProfileImage />
+            {/* ...other about content... */}
+          </div>
         </div>
 
         <a href="#Portofolio">
@@ -283,6 +287,9 @@ const AboutPage = () => {
           </div>
         </a>
       </div>
+
+      {/* Services section added below About Us, now moved to its own page/component */}
+      <Services />
 
       <style>{`
         @keyframes float {
