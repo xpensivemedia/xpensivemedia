@@ -246,7 +246,7 @@ const AboutPage = () => {
                 data-aos="fade-right"
                 data-aos-duration="1300"
               >
-                Xpenive-Media
+                Xpensive Media
               </span>
             </h2>
 
