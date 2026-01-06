@@ -1,6 +1,6 @@
 ! **Readme by DEEPS** !
 
-To edit Name on the Header - goto Navbar.jsx and in line 88 you can change.
+To edit Name on the Header - goto Navbar.jsx and in line 106 you can change.
 
 To edit Download CV and View projects - first you need to import the file to src>assets>file. goto About.jsx and in line 261 you can find //make sure to change the name at 14 line import ResumePDF from '../assets/Gurudeep V Resume.pdf';
 
