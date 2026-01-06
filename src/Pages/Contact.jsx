@@ -98,6 +98,13 @@ const ContactPage = () => {
             Contact Us
           </span>
         </h2>
+        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-4 lg:px-0 w-full">
+              <a href={ResumePDF} download="Conquer_Media_Broucher.pdf" className="w-full lg:w-auto">
+                <button className="w-full lg:w-auto sm:px-6 py-2 sm:py-3 rounded-lg border border-[#a855f7]/50 text-[#FFFFFF] font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center lg:justify-start gap-2 bg-[#7360f0] animate-bounce-slow delay-200">
+                  <FileText className="w-4 h-4 sm:w-5 sm:h-5" /> Download CV
+                </button>
+              </a>
+        </div>
         <p
           data-aos="fade-up"
           data-aos-duration="1100"

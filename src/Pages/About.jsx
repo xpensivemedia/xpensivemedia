@@ -31,7 +31,7 @@ const Header = memo(() => (
       data-aos-duration="800"
     >
       <Sparkles className="w-5 h-5 text-purple-400" />
-      From raw to Remarkable
+      Creating Brands That People Remember
       <Sparkles className="w-5 h-5 text-purple-400" />
     </div>
   </div>
@@ -57,7 +57,7 @@ const ProfileImage = memo(() => (
           <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 via-transparent to-blue-500/20 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 hidden sm:block" />
 
           <img
-            src="/Conquer_Media.jpg"
+            src="/Xpenive-Media.jpg"
             alt="Profile"
             className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
             loading="lazy"
@@ -259,11 +259,13 @@ const AboutPage = () => {
             </p>
 
             <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-4 lg:px-0 w-full">
-              <a href={ResumePDF} download="Conquer_Media_Broucher.pdf" className="w-full lg:w-auto">
+//
+{/*              <a href={ResumePDF} download="Conquer_Media_Broucher.pdf" className="w-full lg:w-auto">
                 <button className="w-full lg:w-auto sm:px-6 py-2 sm:py-3 rounded-lg border border-[#a855f7]/50 text-[#FFFFFF] font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center lg:justify-start gap-2 bg-[#7360f0] animate-bounce-slow delay-200">
                   <FileText className="w-4 h-4 sm:w-5 sm:h-5" /> Download CV
                 </button>
               </a>
+*/}              //
               <a href="#Portofolio" className="w-full lg:w-auto">
                 <button
                   data-aos="fade-up"
