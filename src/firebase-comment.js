@@ -4,13 +4,13 @@ import { getStorage } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCyzE09t21le-MPw7ZZT0_gHgspy703wIs",
-    authDomain: "conquer-media.firebaseapp.com",
-    projectId: "conquer-media",
-    storageBucket: "conquer-media.appspot.com",
-    messagingSenderId: "805250780228",
-    appId: "1:805250780228:web:71e1cef9cbe35c595e4011",
-    measurementId: "G-PPVP38LNZQ"
+  apiKey: "AIzaSyCqvldVtyKS-xnXp2SYfq-uR5BnasyhEeI",
+    authDomain: "xpensive-media.firebaseapp.com",
+    projectId: "xpensive-media",
+    storageBucket: "xpensive-media.firebasestorage.app",
+    messagingSenderId: "302194834178",
+    appId: "1:302194834178:web:2156ae33f9bd3ad9ace01b",
+    measurementId: "G-ZWNFX2S4Y8"
 };
 
 // Initialize with a unique name

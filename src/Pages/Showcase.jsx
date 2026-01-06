@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Navbar from '../components/Navbar';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { Play, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { FaWhatsapp, FaInstagram } from 'react-icons/fa';
+import { supabase } from '../supabase';
 
 // Converted from provided HTML -> JSX with React behavior for carousel + modal
 export default function Showcase() {
@@ -35,10 +35,10 @@ export default function Showcase() {
     {
       id: 0,
       cards: [
-        { title: 'Car Delivery', category: 'car-delivery', path: 'videos/car-delivery-1.mp4' },
-        { title: 'Podcast', category: 'podcasts', path: 'videos/podcast-1.mp4' },
-        { title: 'Events & Weddings', category: 'events-weddings', path: 'videos/wedding-invitation-1.mp4' },
-        { title: 'Logo Reveal', category: 'logo-reveal', path: 'videos/logo-reveal-1.mp4' }
+        { title: 'Car Delivery', category: 'car-delivery', path: 'car-delivery-1.mp4' },
+        { title: 'Podcast', category: 'podcasts', path: 'podcast-1.mp4' },
+        { title: 'Events & Weddings', category: 'events-weddings', path: 'wedding-invitation-1.mp4' },
+        { title: 'Logo Reveal', category: 'logo-reveal', path: 'logo-reveal-1.mp4' }
       ],
     },
   ];
@@ -53,16 +53,16 @@ export default function Showcase() {
   const filteredCards = slides.flatMap(s => s.cards).filter(c => activeCategory === 'all' ? true : c.category === activeCategory);
 
   // Helper: resolve a storage path to a download URL and assign to <video>
-  async function safeAssignVideoSrc(el, path) {
-    if (!el || !path) return false;
+  async function safeAssignVideoSrc(videoEl, path) {
     try {
-      const storage = getStorage();
-      const url = await getDownloadURL(ref(storage, path));
-      el.src = url;
-      try { console.log('[showcase] getDownloadURL ok', path, url); } catch(_) {}
-      return true;
+      const { data } = supabase.storage.from('portfolio-videos').getPublicUrl(path);
+      if (data && data.publicUrl) {
+        videoEl.src = data.publicUrl;
+        return true;
+      }
+      return false;
     } catch (e) {
-      try { console.error('[showcase] getDownloadURL failed', path, e); } catch(_) {}
+      try { console.error('[showcase] assign video src failed', path, e); } catch(_) {}
       return false;
     }
   }

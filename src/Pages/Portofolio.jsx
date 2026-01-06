@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Play, ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { supabase } from '../supabase';
 
 export default function FullWidthTabs() {
   const carouselRef = useRef(null);
@@ -21,14 +21,15 @@ export default function FullWidthTabs() {
     { key: 'podcasts', label: 'Podcasts', icon: 'handshake' },
   ];
 
+  // Update video paths to match Supabase bucket structure
   const slides = [
     {
       id: 0,
       cards: [
-        { title: 'Car Delivery', category: 'car-delivery', path: 'videos/car-delivery-1.mp4' },
-        { title: 'Podcast', category: 'podcasts', path: 'videos/podcast-1.mp4' },
-        { title: 'Events & Weddings', category: 'events-weddings', path: 'videos/wedding-invitation-1.mp4' },
-        { title: 'Logo Reveal', category: 'logo-reveal', path: 'videos/logo-reveal-1.mp4' }
+        { title: 'Car Delivery', category: 'car-delivery', path: 'car-delivery-1.mp4' },
+        { title: 'Podcast', category: 'podcasts', path: 'podcast-1.mp4' },
+        { title: 'Events & Weddings', category: 'events-weddings', path: 'wedding-invitation-1.mp4' },
+        { title: 'Logo Reveal', category: 'logo-reveal', path: 'logo-reveal-1.mp4' }
       ],
     },
   ];
@@ -46,14 +47,27 @@ export default function FullWidthTabs() {
   async function safeAssignVideoSrc(el, path) {
     if (!el || !path) return false;
     try {
+      const { data } = supabase.storage.from('portfolio-videos').getPublicUrl(path);
+      if (data && data.publicUrl) {
+        el.src = data.publicUrl;
+        return true;
+      }
+      return false;
+    } catch (e) {
+      try { console.error('[portfolio] assign video src failed', path, e); } catch(_) {}
+      return false;
+    }
+  }
+
+  // Preload video URL on component mount to ensure it's ready
+  async function preloadVideoUrl(path) {
+    try {
       const storage = getStorage();
       const url = await getDownloadURL(ref(storage, path));
-      el.src = url;
-      try { console.log('[portfolio] getDownloadURL ok', path, url); } catch(_) {}
-      return true;
+      return url;
     } catch (e) {
-      try { console.error('[portfolio] getDownloadURL failed', path, e); } catch(_) {}
-      return false;
+      try { console.error('[portfolio] preload video url failed', path, e); } catch(_) {}
+      return null;
     }
   }
 
@@ -205,17 +219,35 @@ export default function FullWidthTabs() {
     const el = carouselRef.current; if (!el) return;
     try {
       const vids = Array.from(el.querySelectorAll('video.showcase-video'));
-      vids.slice(0, 3).forEach((v) => {
+      vids.slice(0, 4).forEach((v) => {
         try {
           if (!v.src) {
             const ds = v.getAttribute('data-src');
-            if (ds) { (async () => { const ok = await safeAssignVideoSrc(v, ds); if (ok) try { console.log('[portfolio] initial preload assigned', ds); } catch(_) {} else try { console.error('[portfolio] initial preload failed', ds); } catch(_) {} })(); }
+            if (ds) { 
+              (async () => { 
+                const ok = await safeAssignVideoSrc(v, ds); 
+                if (ok) {
+                  try { console.log('[portfolio] initial preload assigned', ds); } catch(_) {}
+                  v.load();
+                  setTimeout(() => {
+                    try {
+                      const p = v.play();
+                      if (p && typeof p.then === 'function') {
+                        p.catch(err => { try { console.warn('[portfolio] autoplay blocked', err); } catch(_) {} });
+                      }
+                    } catch (e) { void e; }
+                  }, 100);
+                } else {
+                  try { console.error('[portfolio] initial preload failed', ds); } catch(_) {}
+                }
+              })(); 
+            }
           }
           v.preload = 'auto';
           try { v.loading = 'eager'; } catch(_) {}
           v.muted = true; v.setAttribute('muted', ''); v.playsInline = true; v.setAttribute('playsinline', ''); v.autoplay = true; v.setAttribute('autoplay', ''); v.loop = true; v.setAttribute('loop','');
           v.load();
-          setTimeout(() => { try { const p = v.play(); if (p && typeof p.then === 'function') p.catch(() => {}); } catch (e) { void e; } }, 300);
+          setTimeout(() => { try { const p = v.play(); if (p && typeof p.then === 'function') p.catch(() => {}); } catch (e) { void e; } }, 500);
         } catch (e) { void e; }
       });
     } catch (e) { void e; }
