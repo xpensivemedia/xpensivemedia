@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import Navbar from '../components/Navbar';
 import { Play, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { FaWhatsapp, FaInstagram } from 'react-icons/fa';
@@ -42,6 +42,23 @@ export default function Showcase() {
       ],
     },
   ];
+
+  const showcaseItems = [
+    { id: 1, path: 'showcase-video-1.mp4', title: 'Video 1', category: 'events-weddings' },
+    { id: 2, path: 'showcase-video-2.mp4', title: 'Video 2', category: 'car-delivery' },
+    { id: 3, path: 'showcase-video-3.mp4', title: 'Video 3', category: 'logo-reveal' },
+    { id: 4, path: 'showcase-video-4.mp4', title: 'Video 4', category: 'podcasts' },
+    { id: 5, path: 'showcase-video-5.mp4', title: 'Video 5', category: 'events-weddings' },
+    { id: 6, path: 'showcase-video-6.mp4', title: 'Video 6', category: 'car-delivery' },
+    // Add more videos with correct categories
+  ];
+
+  const filteredItems = useMemo(() => {
+    if (activeCategory === 'all') {
+      return showcaseItems;
+    }
+    return showcaseItems.filter(item => item.category === activeCategory);
+  }, [activeCategory, showcaseItems]);
 
   // filter slides based on activeCategory; returns indices of slides that have at least one card matching category
   const visibleSlideIndices = slides
@@ -359,11 +376,25 @@ export default function Showcase() {
 
   // detect mobile/responsive mode
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth <= 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Add this useEffect to re-render filtered items on mobile
+  useEffect(() => {
+    if (isMobile) {
+      // Force re-render of mobile scroll view when category changes
+      const mobileScroll = mobileScrollRef.current;
+      if (mobileScroll) {
+        mobileScroll.scrollLeft = 0;
+      }
+    }
+  }, [activeCategory, isMobile, filteredItems]);
 
   // Auto-play modal video when opened and pause/cleanup when closed
   useEffect(() => {
@@ -397,34 +428,51 @@ export default function Showcase() {
     }
   }, [modalOpen, modalSrc]);
 
-  async function openModal(pathOrUrl, title) {
-    let final = pathOrUrl;
-    // If it's not an absolute URL, resolve it via Firebase Storage
-    try {
-      if (final && !/^https?:\/\//i.test(final)) {
-        const storage = getStorage();
-        final = await getDownloadURL(ref(storage, final));
-      }
-    } catch (e) {
-      try { console.error('[showcase] openModal getDownloadURL failed', pathOrUrl, e); } catch(_) {}
-      final = '';
-    }
-
-    setModalSrc(final);
+  const openModal = async (path, title) => {
     setModalTitle(title);
     setModalOpen(true);
-    document.body.style.overflow = 'hidden';
-  }
+    
+    try {
+      // Get the public URL from Supabase
+      const { data } = supabase.storage.from('portfolio-videos').getPublicUrl(path);
+      if (data && data.publicUrl) {
+        setModalSrc(data.publicUrl);
+      } else {
+        console.error('[showcase] failed to get public URL', path);
+      }
+    } catch (e) {
+      console.error('[showcase] modal URL fetch error', e);
+    }
 
-  function closeModal() {
+    // Play video after DOM updates
+    setTimeout(() => {
+      if (modalVideoRef.current) {
+        modalVideoRef.current.load();
+        try {
+          const playPromise = modalVideoRef.current.play();
+          if (playPromise && typeof playPromise.then === 'function') {
+            playPromise.catch(err => {
+              console.error('[showcase] modal video play failed', err);
+            });
+          }
+        } catch (e) {
+          console.error('[showcase] modal play error', e);
+        }
+      }
+    }, 150);
+  };
+
+  const closeModal = () => {
     setModalOpen(false);
     setModalSrc('');
     setModalTitle('');
-    document.body.style.overflow = 'auto';
-  }
+    if (modalVideoRef.current) {
+      modalVideoRef.current.pause();
+      modalVideoRef.current.currentTime = 0;
+    }
+  };
 
-  
-
+  // Update modal video element
   return (
     <div className="min-h-screen bg-[#030014] overflow-hidden" id="Showcase">
       <style>{`/* Converted showcase styles (trimmed to essentials) */
@@ -651,19 +699,54 @@ export default function Showcase() {
       </footer>
 
           {/* Modal */}
-          <div className={`video-modal ${modalOpen ? 'active' : ''}`} onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
-            <div className="video-modal-overlay" />
-            <div className="video-modal-content">
-              <button className="video-modal-close" onClick={closeModal} aria-label="Close"><X /></button>
-              <div style={{position: 'relative'}}>
-                <video key={modalSrc} ref={modalVideoRef} id="modalVideo" controls playsInline preload="metadata" muted autoPlay style={{width: '100%'}}>
-                  {modalSrc && <source src={modalSrc} type="video/mp4" />}
-                </video>
-                <div style={{marginTop: 8}}><strong>{modalTitle}</strong></div>
-              </div>
-            </div>
-          </div>
-
+          {modalOpen && (
+      <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+        <div className="relative w-full max-w-4xl bg-black rounded-lg overflow-hidden">
+          <button
+            onClick={closeModal}
+            className="absolute top-4 right-4 z-10 text-white bg-black/50 rounded-full p-2 hover:bg-black/80"
+          >
+            ✕
+          </button>
+          
+          <video
+            ref={modalVideoRef}
+            key={modalSrc}
+            controls
+            autoPlay
+            muted
+             className="w-full h-auto max-h-[80vh]"
+             onLoadedData={() => {
+               try {
+                modalVideoRef.current.muted = false;
+                 modalVideoRef.current?.play();
+               } catch (e) {
+                 console.error('[showcase] modal video loadeddata error', e);
+               }
+             }}
+             onCanPlay={() => {
+               try {
+                modalVideoRef.current.muted = false;
+                 modalVideoRef.current?.play();
+               } catch (e) {
+                 console.error('[showcase] modal video canplay error', e);
+               }
+             }}
+           >
+            {modalSrc && (
+              <source 
+                src={modalSrc} 
+                type="video/mp4" 
+                onError={(e) => {
+                  console.error('[showcase] modal video source error', e);
+                }}
+              />
+            )}
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    )}
         </div>
       </main>
 
