@@ -5,6 +5,7 @@ import Komentar from "../components/Commentar";
 import Swal from "sweetalert2";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import ResumePDF from '../assets/Gurudeep V Resume.pdf';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({

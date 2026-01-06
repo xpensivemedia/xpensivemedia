@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import ResumePDF from '../assets/Gurudeep V Resume.pdf';
+//import ResumePDF from '../assets/Gurudeep V Resume.pdf';
 
 // Memoized Components
 const Header = memo(() => (
