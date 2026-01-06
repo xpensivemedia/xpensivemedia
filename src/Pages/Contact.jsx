@@ -5,7 +5,7 @@ import Komentar from "../components/Commentar";
 import Swal from "sweetalert2";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import ResumePDF from '../assets/Gurudeep V Resume.pdf';
+import ResumePDF from '../assets/XpensiveMedia-Brochure.pdf';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -108,7 +108,7 @@ const ContactPage = () => {
         </p>
 
         <div className="mt-4">
-          <a href={ResumePDF} download="Conquer_Media_Broucher.pdf" className="inline-block">
+          <a href={ResumePDF} download="XpensiveMedia-Brochure.pdf" className="inline-block">
             <button className="sm:px-6 py-2 rounded-lg border border-[#a855f7]/50 text-white font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 bg-gradient-to-r from-[#6366f1] to-[#a855f7]">
               <FileText className="w-4 h-4 sm:w-5 sm:h-5" /> Download CV
             </button>

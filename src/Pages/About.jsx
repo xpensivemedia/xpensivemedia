@@ -12,7 +12,7 @@ import {
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Services from "./Services";
-import ResumePDF from '../assets/Gurudeep V Resume.pdf';
+import ResumePDF from '../assets/XpensiveMedia-Brochure.pdf';
 
 // Memoized Components
 const Header = memo(() => (

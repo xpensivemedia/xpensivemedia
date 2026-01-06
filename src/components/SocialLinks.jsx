@@ -13,7 +13,7 @@ const socialLinks = [
     displayName: "Let's Connect",
     subText: "on WhatsApp",
     icon: BsWhatsapp,
-    url: "https://wa.me/917090232329",
+    url: "https://wa.me/916363770057",
     color: "#25D366",
     gradient: "from-[#25D366] to-[#128C7E]",
     isPrimary: true
@@ -21,36 +21,36 @@ const socialLinks = [
   {
     name: "Instagram",
     displayName: "Instagram",
-    subText: "@conquermedia__",
+    subText: "@xpensivemedia.co",
     icon: Instagram,
-    url: "https://www.instagram.com/conquermedia__",
+    url: "https://www.instagram.com/xpensivemedia.co",
     color: "#E4405F",
     gradient: "from-[#833AB4] via-[#E4405F] to-[#FCAF45]"
   },
   {
     name: "YouTube",
     displayName: "Youtube",
-    subText: "@conquermedia2514",
+    subText: "@XpensiveMediaYT",
     icon: Youtube,
-    url: "https://www.youtube.com/@conquermedia2514",
+    url: "https://www.youtube.com/@XpensiveMediaYT",
     color: "#FF0000",
     gradient: "from-[#FF0000] to-[#CC0000]"
   },
   {
     name: "Email",
     displayName: "Email",
-    subText: "conquermedia.in@gmail.com",
+    subText: "xpensivemedia.co@gmail.com",
     icon: Mail,
-    url: "mailto:conquermedia.in@gmail.com",
+    url: "mailto:xpensivemedia.co@gmail.com",
     color: "#ffffff",
     gradient: "from-[#333] to-[#24292e]"
   },
   {
     name: "LinkedIn",
     displayName: "LinkedIn",
-    subText: "@conquermedia",
+    subText: "@xpensivemedia",
     icon: Linkedin,
-    url: "https://www.linkedin.com/in/conquermedia",
+    url: "https://www.linkedin.com/in/xpensivemedia",
     color: "white",
     gradient: "from-[#000000] via-[#25F4EE] to-[#FE2C55]"
   }
