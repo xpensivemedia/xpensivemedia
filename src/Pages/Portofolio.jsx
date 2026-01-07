@@ -19,6 +19,9 @@ export default function FullWidthTabs() {
     { key: 'car-delivery', label: 'Cars-Delively', icon: 'car' },
     { key: 'logo-reveal', label: 'Logo Reveal', icon: 'camera' },
     { key: 'podcasts', label: 'Podcasts', icon: 'handshake' },
+    { key: 'real-estate', label: 'Real Estate', icon: 'home' },
+    { key: 'commercial', label: 'Commercial', icon: 'briefcase' },
+    { key: 'school-works', label: 'School Works', icon: 'book-open' },
   ];
 
   // Update video paths to match Supabase bucket structure
@@ -27,9 +30,21 @@ export default function FullWidthTabs() {
       id: 0,
       cards: [
         { title: 'Car Delivery', category: 'car-delivery', path: 'car-delivery-1.mp4' },
-        { title: 'Podcast', category: 'podcasts', path: 'podcast-1.mp4' },
+        { title: 'Mundhe Banni', category: 'podcasts', path: 'mundhe-banni.mp4' },
         { title: 'Events & Weddings', category: 'events-weddings', path: 'wedding-invitation-1.mp4' },
-        { title: 'Logo Reveal', category: 'logo-reveal', path: 'logo-reveal-1.mp4' }
+        { title: 'Events & Weddings', category: 'events-weddings', path: 'tanisha-nikhil.mp4' },
+        { title: 'Logo Reveal', category: 'logo-reveal', path: 'logo-reveal-1.mp4' },
+        { title: 'Real Estate', category: 'real-estate', path: 'vanya-resort.mp4' },
+        { title: 'Real Estate', category: 'real-estate', path: 'krishna-real-estate.mp4' },
+        { title: 'Real Estate', category: 'real-estate', path: 'krishna-real-estate-2.mp4' },
+        { title: 'Commercial', category: 'commercial', path: 'nido-cocktail.mp4' },
+        { title: 'Commercial', category: 'commercial', path: 'nido-valentine.mp4' },
+        { title: 'Commercial', category: 'commercial', path: 'pink-bag.mp4' },
+        { title: 'Commercial', category: 'commercial', path: 'nido-cricket-poster.mp4' },
+        { title: 'Commercial', category: 'commercial', path: 'bracelet.mp4' },
+        { title: 'School Works', category: 'school-works', path: 'euro-kids-pink-day.mp4' },
+        { title: 'School Works', category: 'school-works', path: 'euro-kids-holi.mp4' },
+        { title: 'School Works', category: 'school-works', path: 'euro-kids-annual-day.mp4' },
       ],
     },
     // Add more slides with categorized videos
