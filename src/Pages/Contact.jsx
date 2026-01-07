@@ -96,7 +96,7 @@ const ContactPage = () => {
               WebkitTextFillColor: "transparent",
             }}
           >
-            Contact Uss
+            Contact Us
           </span>
         </h2>
         <p
