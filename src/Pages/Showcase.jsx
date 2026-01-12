@@ -701,7 +701,7 @@ export default function Showcase() {
           <span className="block text-sm pb-4 text-gray-500 text-center dark:text-gray-400">
             © 2025{" "}
             <a href="#" className="hover:underline">
-              Conquer Media™
+              Xpensive Media™
             </a>
             . All Rights Reserved.
           </span>
@@ -774,7 +774,7 @@ export default function Showcase() {
         </a>
 
         <a
-          href="https://instagram.com/conquermedia__"
+          href="https://instagram.com/xpensivemedia.co"
           target="_blank"
           rel="noreferrer"
           className="float-btn instagram-btn inline-flex items-center justify-center text-white bg-pink-600 hover:bg-pink-700 w-11 h-11 rounded-full shadow-lg"
