@@ -132,7 +132,6 @@ const Navbar = () => {
                         {navItems.map((item) => {
                             const isHash = item.href.startsWith('#');
                             const isActive = isHash ? (location.pathname === '/' && activeSection === item.href.substring(1)) : location.pathname === item.href;
-
                             if (isHash) {
                                 return (
                                     <a
@@ -156,11 +155,10 @@ const Navbar = () => {
                                                     ? "scale-x-100"
                                                     : "scale-x-0 group-hover:scale-x-100"
                                             }`}
-                                        />
+                                        ></span>
                                     </a>
                                 );
                             }
-
                             return (
                                 <Link
                                     key={item.label}
@@ -183,7 +181,7 @@ const Navbar = () => {
                                                 ? "scale-x-100"
                                                 : "scale-x-0 group-hover:scale-x-100"
                                         }`}
-                                    />
+                                    ></span>
                                 </Link>
                             );
                         })}
