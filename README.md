@@ -133,10 +133,15 @@ Xpensive Media Portfolio/
 - Services section highlights offerings with images and descriptions.
 
 ## 📷 Screenshots
-> Add your screenshots here!
+> Some screenshots of the website
+
+> Home Page
 - ![Animated Home Page](public/screenshots/home.png)
+> About Page
 - ![Modern About Page](public/screenshots/about.png)
+> Works Page
 - ![Showcase your projects](public/screenshots/works.png)
+> Contact Page
 - ![Functional Contact form](public/screenshots/contact.png)
 
 ## 🛠️ Services
