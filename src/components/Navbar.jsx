@@ -221,7 +221,17 @@ const Navbar = () => {
                 <div className="w-full px-6 py-8 space-y-6">
                     {navItems.map((item, index) => {
                         const isHash = item.href.startsWith('#');
-                        const isActive = isHash ? (location.pathname === '/' && activeSection === item.href.substring(1)) : location.pathname === item.href;
+                        // Fix: For Contact, ensure activeSection matches 'Contact' and pathname is '/'
+                        let isActive = false;
+                        if (isHash) {
+                            isActive = (location.pathname === '/' && activeSection === item.href.substring(1));
+                            // Special handling for Contact
+                            if (item.label === 'Contact' && location.pathname === '/' && activeSection === 'Contact') {
+                                isActive = true;
+                            }
+                        } else {
+                            isActive = location.pathname === item.href;
+                        }
 
                         const commonClass = `block px-4 py-4 text-xl font-semibold transition-all duration-300 rounded-lg ${isActive ? "bg-gradient-to-r from-[#6366f1] to-[#a855f7] bg-clip-text text-transparent" : "text-[#e2d3fd] hover:text-white"}`;
 
