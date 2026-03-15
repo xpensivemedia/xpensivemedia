@@ -33,7 +33,7 @@ A modern, interactive portfolio website for Xpensive Media, showcasing creative 
 - Modern UI with Tailwind CSS, MUI, and custom gradients
 
 ## 🌐 Demo
-Live demo: [xpensivemedia.vercel.app] , [https://xpensivemedia.vercel.app]
+Live demo: [https://xpensivemedia.vercel.app]
 
 ## ‼️ Folder Structure
 ```
