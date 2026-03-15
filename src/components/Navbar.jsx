@@ -210,20 +210,20 @@ const Navbar = () => {
     
         {/* Mobile Menu Overlay */}
         <div
-            className={`md:hidden h-2/5 fixed inset-0 bg-[#030014] transition-all duration-300 ease-in-out ${
+            className={`md:hidden fixed left-0 right-0 top-16 bg-[#030014] transition-all duration-300 ease-in-out z-50 ${
                 isOpen
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-[-100%] pointer-events-none"
+                    ? "opacity-100 translate-y-0 h-[60vh]"
+                    : "opacity-0 -translate-y-[-100%] h-0 pointer-events-none"
             }`}
-            style={{ top: "64px" }}
+            style={{ borderBottomLeftRadius: '1rem', borderBottomRightRadius: '1rem', boxShadow: isOpen ? '0 8px 32px rgba(99,102,241,0.15)' : 'none' }}
         >
-            <div className="flex flex-col h-full">
-                <div className="px-4 py-6 space-y-4 flex-1 ">
+            <div className="flex flex-col h-full justify-start items-center">
+                <div className="w-full px-6 py-8 space-y-6">
                     {navItems.map((item, index) => {
                         const isHash = item.href.startsWith('#');
                         const isActive = isHash ? (location.pathname === '/' && activeSection === item.href.substring(1)) : location.pathname === item.href;
 
-                        const commonClass = `block px-4 py-3 text-lg font-medium transition-all duration-300 ease ${isActive ? "bg-gradient-to-r from-[#6366f1] to-[#a855f7] bg-clip-text text-transparent font-semibold" : "text-[#e2d3fd] hover:text-white"}`;
+                        const commonClass = `block px-4 py-4 text-xl font-semibold transition-all duration-300 rounded-lg ${isActive ? "bg-gradient-to-r from-[#6366f1] to-[#a855f7] bg-clip-text text-transparent" : "text-[#e2d3fd] hover:text-white"}`;
 
                         if (isHash) {
                             return (
@@ -233,8 +233,8 @@ const Navbar = () => {
                                     onClick={(e) => scrollToSection(e, item.href)}
                                     className={commonClass}
                                     style={{
-                                        transitionDelay: `${index * 100}ms`,
-                                        transform: isOpen ? "translateX(0)" : "translateX(50px)",
+                                        transitionDelay: `${index * 80}ms`,
+                                        transform: isOpen ? "translateY(0)" : "translateY(40px)",
                                         opacity: isOpen ? 1 : 0,
                                     }}
                                 >
@@ -250,8 +250,8 @@ const Navbar = () => {
                                 onClick={() => setIsOpen(false)}
                                 className={commonClass}
                                 style={{
-                                    transitionDelay: `${index * 100}ms`,
-                                    transform: isOpen ? "translateX(0)" : "translateX(50px)",
+                                    transitionDelay: `${index * 80}ms`,
+                                    transform: isOpen ? "translateY(0)" : "translateY(40px)",
                                     opacity: isOpen ? 1 : 0,
                                 }}
                             >
