@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, memo, useMemo } from "react";
-import { projects } from "../constants/projects";
 import {
   FileText,
   Code,
@@ -134,7 +133,6 @@ StatCard.displayName = 'StatCard';
 
 const AboutPage = () => {
   // Memoized calculations
-  const [totalProjects, setTotalProjects] = useState(0);
   const [totalCertificates, setTotalCertificates] = useState(0);
   const [YearExperience, setYearExperience] = useState(0);
 
@@ -154,7 +152,6 @@ const AboutPage = () => {
           ? 1
           : 0);
 
-      setTotalProjects(projects.length);
       setTotalCertificates(storedCertificates.length);
       setYearExperience(experience);
     };
@@ -221,7 +218,7 @@ const AboutPage = () => {
         animation: "fade-left",
       },
     ],
-    [totalProjects, totalCertificates, YearExperience]
+    [totalCertificates, YearExperience]
   );
 
   return (

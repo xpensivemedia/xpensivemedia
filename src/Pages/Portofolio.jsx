@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Play, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { supabase } from '../supabase';
+import { videoCategories, videoSlides } from '../constants/portfolioVideos';
 
 export default function FullWidthTabs() {
   const carouselRef = useRef(null);
@@ -13,42 +14,8 @@ export default function FullWidthTabs() {
   const [modalTitle, setModalTitle] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
 
-  const categories = [
-    { key: 'all', label: 'All', icon: 'grid' },
-    { key: 'events-weddings', label: 'Events & Weddings', icon: 'heart' },
-    { key: 'car-delivery', label: 'Cars-Delively', icon: 'car' },
-    { key: 'logo-reveal', label: 'Logo Reveal', icon: 'camera' },
-    { key: 'podcasts', label: 'Podcasts', icon: 'handshake' },
-    { key: 'real-estate', label: 'Real Estate', icon: 'home' },
-    { key: 'commercial', label: 'Commercial', icon: 'briefcase' },
-    { key: 'school-works', label: 'School Works', icon: 'book-open' },
-  ];
-
-  // Update video paths to match Supabase bucket structure
-  const slides = [
-    {
-      id: 0,
-      cards: [
-        { title: 'Car Delivery', category: 'car-delivery', path: 'car-delivery-1.mp4' },
-        { title: 'Mundhe Banni', category: 'podcasts', path: 'mundhe-banni.mp4' },
-        { title: 'Events & Weddings', category: 'events-weddings', path: 'wedding-invitation-1.mp4' },
-        { title: 'Events & Weddings', category: 'events-weddings', path: 'tanisha-nikhil.mp4' },
-        { title: 'Logo Reveal', category: 'logo-reveal', path: 'logo-reveal-1.mp4' },
-        { title: 'Real Estate', category: 'real-estate', path: 'vanya-resort.mp4' },
-        { title: 'Real Estate', category: 'real-estate', path: 'krishna-real-estate.mp4' },
-        { title: 'Real Estate', category: 'real-estate', path: 'krishna-real-estate-2.mp4' },
-        { title: 'Commercial', category: 'commercial', path: 'nido-cocktail.mp4' },
-        { title: 'Commercial', category: 'commercial', path: 'nido-valentine.mp4' },
-        { title: 'Commercial', category: 'commercial', path: 'pink-bag.mp4' },
-        { title: 'Commercial', category: 'commercial', path: 'nido-cricket-poster.mp4' },
-        { title: 'Commercial', category: 'commercial', path: 'bracelet.mp4' },
-        { title: 'School Works', category: 'school-works', path: 'euro-kids-pink-day.mp4' },
-        { title: 'School Works', category: 'school-works', path: 'euro-kids-holi.mp4' },
-        { title: 'School Works', category: 'school-works', path: 'euro-kids-annual-day.mp4' },
-      ],
-    },
-    // Add more slides with categorized videos
-  ];
+  const categories = videoCategories;
+  const slides = videoSlides;
 
   const filteredCards = useMemo(() => {
     if (activeCategory === 'all') {
@@ -79,11 +46,18 @@ export default function FullWidthTabs() {
   async function safeAssignVideoSrc(el, path) {
     if (!el || !path) return false;
     try {
+      const directUrl = /^https?:\/\//i.test(path) || path.startsWith('/');
+      if (directUrl) {
+        el.src = path;
+        return true;
+      }
+
       const { data } = supabase.storage.from('portfolio-videos').getPublicUrl(path);
       if (data && data.publicUrl) {
         el.src = data.publicUrl;
         return true;
       }
+
       return false;
     } catch (e) {
       try { console.error('[portfolio] assign video src failed', path, e); } catch(_) {}
@@ -409,12 +383,17 @@ export default function FullWidthTabs() {
     setModalOpen(true);
     
     try {
-      // Get the public URL from Supabase
-      const { data } = supabase.storage.from('portfolio-videos').getPublicUrl(path);
-      if (data && data.publicUrl) {
-        setModalSrc(data.publicUrl);
+      const directUrl = /^https?:\/\//i.test(path) || path.startsWith('/');
+      if (directUrl) {
+        setModalSrc(path);
       } else {
-        console.error('[portfolio] failed to get public URL', path);
+        // Get the public URL from Supabase
+        const { data } = supabase.storage.from('portfolio-videos').getPublicUrl(path);
+        if (data && data.publicUrl) {
+          setModalSrc(data.publicUrl);
+        } else {
+          console.error('[portfolio] failed to get public URL', path);
+        }
       }
     } catch (e) {
       console.error('[portfolio] modal URL fetch error', e);
@@ -667,21 +646,6 @@ export default function FullWidthTabs() {
             </div>
           </div>
         </section>
-
-        <div className="flex justify-center mt-8">
-          <a href="/showcase">
-            <button className="group relative w-[200px]">
-              <div className="absolute -inset-0.5 bg-[#0072fe] rounded-xl opacity-40 blur-md group-hover:opacity-80 transition-all duration-700"></div>
-              <div className="relative h-12 bg-[#0072fe] rounded-lg border border-[#0072fe] leading-none overflow-hidden">
-                <div className="absolute inset-0 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 bg-white/10"></div>
-                <span className="absolute inset-0 flex items-center justify-center gap-2 text-sm tracking-wide">
-                  <span className="text-white font-medium z-10">VIEW ALL VIDEOS</span>
-                  <ChevronRight className="w-4 h-4 text-white transform transition-all duration-300 group-hover:translate-x-1" />
-                </span>
-              </div>
-            </button>
-          </a>
-        </div>
 
         {/* Modal */}
         {modalOpen && (

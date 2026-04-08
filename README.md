@@ -159,7 +159,16 @@ Sample projects include:
 - Logo Reveal Animation
 - Car Delivery Video Edit
 - Podcast Reel Sample
-See `src/constants/projects.js` for more.
+See `src/constants/portfolioVideos.js` for the video lists.
+
+### Adding Videos (Carousel)
+The main video carousels/grids are driven by `src/constants/portfolioVideos.js`.
+
+1. Add the video file using one of these options:
+   - **Supabase (recommended for large videos):** upload to Storage bucket `portfolio-videos` (public), then set `path: 'your-file.mp4'`.
+   - **Local file:** put the file in `public/videos/` and set `path: '/videos/your-file.mp4'`.
+2. Add an entry to `videoSlides[0].cards` (carousel).
+3. Ensure `category` matches a key in `videoCategories`.
 
 ## 🔧 Stats
 - [PageSpeed Insights - Vercel](https://pagespeed.web.dev/analysis?url=https://xpensivemedia.vercel.app)

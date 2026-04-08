@@ -1,5 +1,4 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import Showcase from "./Pages/Showcase";
 import { useState, useEffect } from 'react';
 import "./index.css";
 import Home from "./Pages/Home";
@@ -8,7 +7,6 @@ import AnimatedBackground from "./components/Background";
 import Navbar from "./components/Navbar";
 import Portofolio from "./Pages/Portofolio";
 import ContactPage from "./Pages/Contact";
-import ProjectDetails from "./components/ProjectDetail";
 import Services from "./Pages/Services";
 
 import { AnimatePresence } from 'framer-motion';
@@ -59,7 +57,7 @@ const LandingPage = () => {
 
 const ProjectPageLayout = () => (
   <>
-    <ProjectDetails />
+    {/* Project details page removed */}
     <footer>
       <center>
         <hr className="my-3 border-gray-400 opacity-15 sm:mx-auto lg:my-6 text-center" />
@@ -79,8 +77,6 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/showcase" element={<Showcase />} />
-      <Route path="/project/:id" element={<ProjectPageLayout />} />
       <Route path="/services" element={<Services />} />
     </Routes>
   );
