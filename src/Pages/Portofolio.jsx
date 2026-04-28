@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { Play, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { supabase } from '../supabase';
 import { videoCategories, videoSlides } from '../constants/portfolioVideos';
+import WebsiteProjects from '../components/WebsiteProjects';
 
 export default function FullWidthTabs() {
   const carouselRef = useRef(null);
@@ -13,6 +14,14 @@ export default function FullWidthTabs() {
   const [modalSrc, setModalSrc] = useState('');
   const [modalTitle, setModalTitle] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
+  const [loadedVideos, setLoadedVideos] = useState({});
+
+  const handleVideoReady = useCallback((videoKey) => {
+    setLoadedVideos((prev) => {
+      if (prev[videoKey]) return prev;
+      return { ...prev, [videoKey]: true };
+    });
+  }, []);
 
   const categories = videoCategories;
   const slides = videoSlides;
@@ -448,13 +457,21 @@ export default function FullWidthTabs() {
       .slider-card{flex:0 0 calc((100% - 2rem)/3);border-radius:12px;overflow:hidden;aspect-ratio:9/16;max-width:280px;background:transparent;cursor:pointer}
       .slider-card{scroll-snap-align:center}
       .video-thumbnail{width:100%;height:100%;object-fit:cover}
+      .video-thumbnail.loading{opacity:0;transition:opacity .2s ease}
+      .video-thumbnail.ready{opacity:1;transition:opacity .2s ease}
+      .video-skeleton{position:absolute;inset:0;border-radius:12px;background:linear-gradient(90deg,rgba(255,255,255,0.08),rgba(255,255,255,0.2),rgba(255,255,255,0.08));background-size:200% 100%;animation:portfolioShimmer 1.4s ease-in-out infinite}
+      @keyframes portfolioShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
       .video-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.18);opacity:0;transition:opacity .25s}
       .slider-card:hover .video-overlay{opacity:1}
       .video-play-btn{width:56px;height:56px;border-radius:999px;background:var(--primary-color);display:flex;align-items:center;justify-content:center;color:#fff}
       .nav-button{position:absolute;top:50%;transform:translateY(-50%);width:45px;height:45px;border-radius:12px;background:var(--bg-dark);border:2px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;z-index:10}
       .nav-button.prev{left:10px}.nav-button.next{right:10px}
-      .dot{width:12px;height:12px;border-radius:6px;background:var(--bg-dark);border:2px solid rgba(255,255,255,0.08);cursor:pointer}
-      .dot.active{background:var(--primary-color);width:24px}
+      .portfolio-slider-dots.slick-dots{position:static;width:100%;margin-top:16px;padding:0;display:flex !important;justify-content:center;align-items:center;gap:10px}
+      .portfolio-slider-dots.slick-dots li{width:auto;height:auto;margin:0;display:flex;align-items:center;justify-content:center}
+      .portfolio-slider-dots.slick-dots li button{padding:0;display:flex;align-items:center;justify-content:center;line-height:0;background:transparent;border:none;cursor:pointer}
+      .portfolio-slider-dots.slick-dots li button:before{content:none}
+      .portfolio-slider-dots .website-dot{display:block;width:10px;height:10px;border-radius:9999px;background:rgba(255,255,255,0.45);border:1px solid rgba(255,255,255,0.7);transition:all .25s ease}
+      .portfolio-slider-dots.slick-dots li.slick-active .website-dot{width:26px;background:linear-gradient(90deg,#6366f1,#a855f7);border-color:transparent;box-shadow:0 0 0 2px rgba(99,102,241,.25)}
       .carousel-item{display:none}
       .carousel-item.active{display:block}
       /* modal */
@@ -491,8 +508,6 @@ export default function FullWidthTabs() {
         .slider-card{flex:0 0 92%;max-width:92%;aspect-ratio:9/14}
         .slider-container{padding-left:8px;padding-right:8px}
         .slider-section{padding:0.5rem 0}
-        .dot{width:10px;height:10px}
-        .dot.active{width:18px}
         .video-modal-content video{max-height:60vh}
         .flat-slider{overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:1rem;padding-bottom:8px}
         .flat-slider .slider-card{scroll-snap-align:center;flex:0 0 92%;max-width:92%}
@@ -546,6 +561,9 @@ export default function FullWidthTabs() {
                   <div className={`carousel-item active`}>
                     <div className="slider-wrapper flat-slider" ref={mobileScrollRef}>
                       {filteredCards.map((card, idx) => (
+                        (() => {
+                          const videoKey = card.path || `mobile-${idx}`;
+                          return (
                         <div
                           key={idx}
                           className="slider-card video-card"
@@ -553,8 +571,9 @@ export default function FullWidthTabs() {
                           onClick={() => openModal(card.path, card.title)}
                         >
                           <div className="video-thumbnail-wrapper" style={{position: 'relative', height: '100%'}}>
+                            {!loadedVideos[videoKey] && <div className="video-skeleton" />}
                             <video
-                              className="video-thumbnail showcase-video"
+                              className={`video-thumbnail showcase-video ${loadedVideos[videoKey] ? 'ready' : 'loading'}`}
                               data-src={card.path}
                               muted
                               autoPlay
@@ -563,7 +582,12 @@ export default function FullWidthTabs() {
                               playsInline
                               crossOrigin="anonymous"
                               poster="/Conquer_Media.jpg"
-                              onError={(e) => { try { e.currentTarget.pause(); } catch(_) { void 0; } }}
+                              onLoadedData={() => handleVideoReady(videoKey)}
+                              onCanPlay={() => handleVideoReady(videoKey)}
+                              onError={(e) => {
+                                handleVideoReady(videoKey);
+                                try { e.currentTarget.pause(); } catch(_) { void 0; }
+                              }}
                               loading="eager"
                             />
                             <div className="video-overlay">
@@ -571,6 +595,8 @@ export default function FullWidthTabs() {
                             </div>
                           </div>
                         </div>
+                          );
+                        })()
                       ))}
                     </div>
                   </div>
@@ -582,6 +608,9 @@ export default function FullWidthTabs() {
                         <div className="slider-wrapper">
                           {slide.cards.map((card, cIdx) => (
                             (activeCategory === 'all' || card.category === activeCategory) && (
+                              (() => {
+                                const videoKey = card.path || `desktop-${slide.id}-${cIdx}`;
+                                return (
                               <div
                                 key={cIdx}
                                 className="slider-card video-card"
@@ -589,8 +618,9 @@ export default function FullWidthTabs() {
                                 onClick={() => openModal(card.path, card.title)}
                               >
                                 <div className="video-thumbnail-wrapper" style={{position: 'relative', height: '100%'}}>
+                                  {!loadedVideos[videoKey] && <div className="video-skeleton" />}
                                   <video
-                                    className="video-thumbnail showcase-video"
+                                    className={`video-thumbnail showcase-video ${loadedVideos[videoKey] ? 'ready' : 'loading'}`}
                                     data-src={card.path}
                                     muted
                                     autoPlay
@@ -599,7 +629,12 @@ export default function FullWidthTabs() {
                                     playsInline
                                      crossOrigin="anonymous"
                                      poster="/Conquer_Media.jpg"
-                                     onError={(e) => { try { e.currentTarget.pause(); } catch(_) { void 0; } }}
+                                     onLoadedData={() => handleVideoReady(videoKey)}
+                                     onCanPlay={() => handleVideoReady(videoKey)}
+                                     onError={(e) => {
+                                       handleVideoReady(videoKey);
+                                       try { e.currentTarget.pause(); } catch(_) { void 0; }
+                                     }}
                                      loading="eager"
                                    />
                                   <div className="video-overlay">
@@ -607,6 +642,8 @@ export default function FullWidthTabs() {
                                   </div>
                                 </div>
                               </div>
+                                );
+                              })()
                             )
                           ))}
                         </div>
@@ -624,28 +661,33 @@ export default function FullWidthTabs() {
                 )}
               </div>
 
-              {/* Dots */}
               {!isMobile && (
-                <div className="slider-dots" style={{display: 'flex', justifyContent: 'center', gap: 12, marginTop: 16}}>
+                <ul className="portfolio-slider-dots slick-dots">
                   {slides.map((_, i) => {
                     const visible = visibleSlideIndices.includes(i);
                     if (!visible) return null;
                     const idx = i;
                     return (
-                      <button
-                        key={i}
-                        className={`dot ${idx === activeIndex ? 'active' : ''}`}
-                        onClick={() => setActiveIndex(idx)}
-                        aria-label={`Go to slide ${i+1}`}
-                        type="button"
-                      />
+                      <li key={i} className={idx === activeIndex ? 'slick-active' : ''}>
+                        <button
+                          onClick={() => setActiveIndex(idx)}
+                          aria-label={`Go to slide ${i + 1}`}
+                          type="button"
+                        >
+                          <span className="website-dot" />
+                        </button>
+                      </li>
                     );
                   })}
-                </div>
+                </ul>
               )}
+
             </div>
           </div>
         </section>
+
+        {/* Website Projects carousel section */}
+        <WebsiteProjects />
 
         {/* Modal */}
         {modalOpen && (

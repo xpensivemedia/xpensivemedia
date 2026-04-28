@@ -1,7 +1,9 @@
+/* stylelint-disable at-rule-no-unknown */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* stylelint-enable at-rule-no-unknown */
 
 * {
 	margin: 0;
@@ -17,6 +19,10 @@ body {
 	overflow-x: hidden;
 	background: #030014;
 	scroll-behavior: smooth !important;
+	/* Ensure mobile browsers don't unexpectedly scale text */
+	-webkit-text-size-adjust: 100%;
+	-moz-text-size-adjust: 100%;
+	text-size-adjust: 100%;
 }
 
 @keyframes blob {
@@ -151,4 +157,13 @@ body {
 }
 .animate-slideInRight {
   animation: slideInRight 0.7s ease-out;
+}
+
+/* Ensure consistent vendor prefix ordering for user-select used by some third-party libs (slick-carousel) */
+.slick-slider {
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }

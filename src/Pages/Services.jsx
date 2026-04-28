@@ -1,63 +1,77 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
+import { getSupabaseImageUrl } from "../utils/supabaseImages";
 
 const Services = memo(() => {
+  const [loadedImages, setLoadedImages] = useState({});
+
+  const handleImageLoaded = (id) => {
+    setLoadedImages((prev) => ({ ...prev, [id]: true }));
+  };
+
   // Services data with unique images and text for each card
   const servicesData = [
+    {
+      id: 0,
+      title: "Website Development",
+      description:
+        "We create custom, responsive websites that reflect your brand and engage your audience. From design to development, we build user-friendly sites that drive results and grow your online presence.",
+      image: getSupabaseImageUrl('services-images', 'website-development.webp'),
+    },
     {
       id: 1,
       title: "Corporate Events",
       description:
         "We plan and manage professional corporate events that are seamless, impactful, and aligned with your brand. From conferences to product launches, we handle every detail to deliver a smooth and memorable experience.",
-      image: "/services-images/corporate-events.jpg",
+      image: getSupabaseImageUrl('services-images', 'corporate-events.webp'),
     },
     {
       id: 2,
       title: "Bars & Restaurants",
       description:
         "We shoot and edit high-quality photos and videos that showcase your food, drinks, and atmosphere, helping your brand stand out and attract cust.",
-      image: "/services-images/bars-restaurants.jpg",
+      image: getSupabaseImageUrl('services-images', 'bars-restaurants.webp'),
     },
     {
       id: 3,
       title: "Real Estate",
       description:
         "We shoot and edit professional photos and videos that highlight properties, enhance listings, and attract buyers.Our visuals focus on space, lighting, and detail to present each property at its best and drive faster engagement.",
-      image: "/services-images/real-estate.jpg",
+      image: getSupabaseImageUrl('services-images', 'real-estate.webp'),
     },
     {
       id: 4,
       title: "Testimonials",
       description:
         "We produce professional testimonial shoots that capture genuine client experiences with clarity and authenticity. From planning to filming and editing, we ensure each testimonial feels natural, credible, and aligned with your brand.",
-      image: "/services-images/testimonials.jpg",
+      image: getSupabaseImageUrl('services-images', 'testimonials.webp'),
     },
     {
       id: 5,
       title: "Digital Marketing",
       description:
         "We create data-driven digital marketing strategies that increase visibility, engagement, and conversions.From social media to online campaigns, we help brands connect with the right audience and grow consistently.",
-      image: "/services-images/digital-marketing.jpg",
+      image: getSupabaseImageUrl('services-images', 'digital-marketing.webp'),
     },
     {
       id: 6,
       title: "Social Media",
       description:
         "We manage your social media presence with strategic content, consistent posting, and audience engagement.Our approach helps build brand identity, grow followers, and maintain a strong online presence.",
-      image: "/services-images/social-media.jpg",
+      image: getSupabaseImageUrl('services-images', 'social-media.webp'),
     },
     {
       id: 7,
       title: "Influencer Marketing",
       description:
         "We connect brands with relevant influencers to create authentic, engaging campaigns From strategy to execution, we manage collaborations that increase reach, trust, and brand awareness.",
-      image: "/services-images/influencer-marketing.jpg",
+      image: getSupabaseImageUrl('services-images', 'influencer-marketing.webp'),
     },
     {
       id: 8,
       title: "Podcast",
       description:
         "We handle podcast recording, editing, and production with a focus on clear sound and polished visuals.From setup to final delivery, we help create podcasts that engage audiences and elevate your brand.",
-      image: "/services-images/podcast.jpg",
+      image: getSupabaseImageUrl('services-images', 'podcast.webp'),
     },
   ];
 
@@ -128,13 +142,22 @@ const Services = memo(() => {
               data-aos="fade-up"
               data-aos-duration={900 + i * 50}
             >
-              <div className="w-full h-full rounded-lg overflow-hidden bg-gradient-to-r from-purple-700 to-indigo-600 shadow-lg border border-white/10 p-1">
-                <img
-                  src={service.image}
-                  alt={service.title}
-                  className="w-full h-full object-cover rounded-lg"
-                  loading="lazy"
-                />
+              <div className="w-full h-[220px] sm:h-[260px] lg:h-[210px] xl:h-[240px] max-w-[320px] sm:max-w-none mx-auto rounded-lg overflow-hidden bg-gradient-to-r from-purple-700 to-indigo-600 shadow-lg border border-white/10 p-1">
+                <div className="relative w-full h-full rounded-lg overflow-hidden">
+                  {!loadedImages[service.id] && (
+                    <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-white/10 via-white/20 to-white/10 bg-[length:200%_100%] animate-pulse" />
+                  )}
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className={`w-full h-full object-cover rounded-lg transition-opacity duration-300 ${
+                      loadedImages[service.id] ? "opacity-100" : "opacity-0"
+                    }`}
+                    loading="lazy"
+                    onLoad={() => handleImageLoaded(service.id)}
+                    onError={() => handleImageLoaded(service.id)}
+                  />
+                </div>
               </div>
 
               <div className="w-full">
